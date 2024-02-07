@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+
+    <bean id="customerDao" class="com.acme.customer.CustomerDaoImpl">
+        <constructor-arg ref="jdbcTemplate" />
+    </bean>
+    <bean id="customerService" class="com.acme.customer.CustomerServiceImpl">
+        <constructor-arg ref="customerDao" />
+    </bean>
+
+    <bean class="com.acme.customer.CustomerController">
+        <constructor-arg ref="customerService" />
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <constructor-arg ref="customerDataSource" />
+    </bean>
+
+
+    <bean id="jacksonObjectMapper"
+        class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean" />
+
+
+    <bean id="messageListener" class="com.acme.customer.CustomerCreateListener">
+        <constructor-arg ref="customerService" />
+        <constructor-arg ref="jacksonObjectMapper" />
+    </bean>
+
+    <bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="connectionFactory" />
+        <property name="destinationName" value="customer.create" />
+        <property name="messageListener" ref="messageListener" />
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="sessionTransacted" value="true" />
+    </bean>
+
+
+    <bean id="atomikosConnectionFactory" class="com.atomikos.jms.AtomikosConnectionFactoryBean"
+        init-method="init" destroy-method="close">
+        <property name="uniqueResourceName" value="atomikosConnectionFactory" />
+        <property name="xaConnectionFactory" ref="xaFactory" />
+        <property name="poolSize" value="10" />
+    </bean>
+
+
+    <bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+        <property name="targetConnectionFactory" ref="atomikosConnectionFactory" />
+        <property name="sessionCacheSize" value="10" />
+        <property name="cacheConsumers" value="true" />
+    </bean>
+
+    <bean id="atomikosTransactionManager" class="com.atomikos.icatch.jta.UserTransactionManager"
+        init-method="init" destroy-method="close">
+        <property name="forceShutdown" value="true" />
+    </bean>
+
+    <bean id="atomikosUserTransaction" class="com.atomikos.icatch.jta.UserTransactionImp">
+        <property name="transactionTimeout" value="300" />
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
+        <property name="transactionManager" ref="atomikosTransactionManager" />
+        <property name="userTransaction" ref="atomikosUserTransaction" />
+        <property name="allowCustomIsolationLevels" value="true" />
+    </bean>
+</beans>
