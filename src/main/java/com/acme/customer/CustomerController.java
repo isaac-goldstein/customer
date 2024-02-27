@@ -1,6 +1,8 @@
 package com.acme.customer;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,8 +29,10 @@ public class CustomerController {
         c.setFirstName(firstName);
         c.setLastName(lastName);
         c.setId(id);
-        customerService.create(c);
-
+        int cnt = customerService.create(c);
+        if (cnt != 1) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -40,7 +44,19 @@ public class CustomerController {
      */
     @GetMapping(value = "/customer/{id}", produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     public ResponseEntity<Customer> getCustomer(@PathVariable Integer id) {
-        return new ResponseEntity<>(customerService.read(id), HttpStatus.OK);
+
+
+        return ResponseEntity.ok(customerService.read(id));
+
+        // Customer cust = customerService.read(id);
+
+        // HttpHeaders headers = new HttpHeaders();
+        // headers.setContentType(MediaType.APPLICATION_JSON);
+        // System.out.println(cust);
+        // ResponseEntity<Customer> re = new ResponseEntity<>(cust, headers, HttpStatus.OK);
+
+        // System.out.println(re);
+        // return re;
     }
 
     /**
@@ -54,7 +70,5 @@ public class CustomerController {
         customerService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-
 
 }

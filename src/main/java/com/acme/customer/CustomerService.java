@@ -8,7 +8,7 @@ public interface CustomerService {
     @Transactional
     int create(Customer customer);
 
-    @Transactional(readOnly = true)
+    //@Transactional(readOnly = true)
     Customer read(Integer customerId);
 
     @Transactional    

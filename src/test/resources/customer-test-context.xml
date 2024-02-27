@@ -12,6 +12,7 @@
     <jdbc:initialize-database data-source="customerDataSource">
         <jdbc:script location="classpath:/data/h2-drops.sql" />
         <jdbc:script location="classpath:/data/h2-tables.sql" />
+        <jdbc:script location="classpath:/data/h2-inserts.sql" />
     </jdbc:initialize-database>
 
 

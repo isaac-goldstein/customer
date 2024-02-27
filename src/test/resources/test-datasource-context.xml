@@ -3,10 +3,18 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <!-- Define the H2 DataSource -->
-    <bean id="customerDataSource" class="org.h2.jdbcx.JdbcDataSource">
-        <property name="url"
-            value="jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=Oracle;NON_KEYWORDS=KEY,VALUE;DB_CLOSE_ON_EXIT=FALSE" />
+
+    <!-- Atomikos Datasource Bean -->
+    <bean id="customerDataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean">
+        <property name="uniqueResourceName" value="customerDataSource" />
+        <property name="xaDataSourceClassName" value="org.h2.jdbcx.JdbcDataSource" />
+        <property name="xaProperties">
+            <props>
+                <prop key="url">
+                    jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=Oracle;NON_KEYWORDS=KEY,VALUE;DB_CLOSE_ON_EXIT=FALSE;AUTOCOMMIT=FALSE</prop>
+            </props>
+        </property>
+        <property name="poolSize" value="10" />
     </bean>
 
 
