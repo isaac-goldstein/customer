@@ -20,8 +20,16 @@ public class CustomerController {
     }
 
     @PostMapping("/customer")
-    public ResponseEntity<Void> createCustomer(@RequestParam("firstName") String firstName,
-            @RequestParam("lastName") String lastName, @RequestParam("id") Integer id) {
+    public ResponseEntity<Void> createCustomer(@RequestParam(name = "firstName", required = true) String firstName,
+            @RequestParam(name = "lastName", required = true) String lastName,
+            @RequestParam(name = "id", required = true) Integer id) {
+
+
+
+        // primitive, but it works
+        if (firstName == null || firstName.isEmpty() || lastName == null || lastName.isEmpty() || id == null ) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         Customer c = new Customer();
         c.setFirstName(firstName);
@@ -45,24 +53,24 @@ public class CustomerController {
 
         Customer c = customerService.read(id);
 
-        if(c == null) {
+        if (c == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }else{
+        } else {
             return new ResponseEntity<>(c, HttpStatus.OK);
         }
-        
-    }   
 
-        // Customer cust = customerService.read(id);
+    }
 
-        // HttpHeaders headers = new HttpHeaders();
-        // headers.setContentType(MediaType.APPLICATION_JSON);
-        // System.out.println(cust);
-        // ResponseEntity<Customer> re = new ResponseEntity<>(cust, headers, HttpStatus.OK);
+    // Customer cust = customerService.read(id);
 
-        // System.out.println(re);
-        // return re;
+    // HttpHeaders headers = new HttpHeaders();
+    // headers.setContentType(MediaType.APPLICATION_JSON);
+    // System.out.println(cust);
+    // ResponseEntity<Customer> re = new ResponseEntity<>(cust, headers,
+    // HttpStatus.OK);
 
+    // System.out.println(re);
+    // return re;
 
     /**
      * Deletes a customer with the specified ID.
@@ -74,9 +82,9 @@ public class CustomerController {
     public ResponseEntity<Void> deleteCustomer(@PathVariable Integer id) {
         int delCnt = customerService.delete(id);
 
-        if(delCnt == 1) {
+        if (delCnt == 1) {
             return new ResponseEntity<>(HttpStatus.OK);
-        }else if(delCnt == 0) {
+        } else if (delCnt == 0) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
