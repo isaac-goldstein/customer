@@ -1,8 +1,6 @@
 package com.acme.customer;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,8 +43,15 @@ public class CustomerController {
     @GetMapping(value = "/customer/{id}", produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
     public ResponseEntity<Customer> getCustomer(@PathVariable Integer id) {
 
+        Customer c = customerService.read(id);
 
-        return ResponseEntity.ok(customerService.read(id));
+        if(c == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }else{
+            return new ResponseEntity<>(c, HttpStatus.OK);
+        }
+        
+    }   
 
         // Customer cust = customerService.read(id);
 
@@ -57,7 +62,7 @@ public class CustomerController {
 
         // System.out.println(re);
         // return re;
-    }
+
 
     /**
      * Deletes a customer with the specified ID.
@@ -67,8 +72,14 @@ public class CustomerController {
      */
     @DeleteMapping("/customer/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable Integer id) {
-        customerService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        int delCnt = customerService.delete(id);
+
+        if(delCnt == 1) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else if(delCnt == 0) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
 }

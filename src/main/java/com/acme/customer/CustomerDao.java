@@ -7,6 +7,6 @@ public interface CustomerDao {
 
     Customer read(int id);
 
-    void delete(int id);
+    int delete(int id);
 
 }

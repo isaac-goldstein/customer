@@ -9,8 +9,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void delete(int customerId) {
-        customerDao.delete(customerId);
+    public int delete(int customerId) {
+        return customerDao.delete(customerId);
     }
 
     @Override
@@ -20,7 +20,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public int create(Customer customer) {
-        return customerDao.create(customer);
+        // Check if the customer already exists
+        int result = 0;
+        Customer existingCustomer = customerDao.read(customer.getId());
+        if (existingCustomer == null) {
+            result = customerDao.create(customer);
+        }
+        return result;
     }
 
 }

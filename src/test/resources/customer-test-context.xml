@@ -4,10 +4,11 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                         http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
-    <import resource="classpath:test-message-context.xml" />
-    <import resource="classpath:test-datasource-context.xml" />
-    <import resource="classpath:customer-context.xml" />
+    
 
+    <bean class="org.springframework.transaction.support.TransactionTemplate">
+        <constructor-arg ref="transactionManager"/>
+    </bean>
 
     <jdbc:initialize-database data-source="customerDataSource">
         <jdbc:script location="classpath:/data/h2-drops.sql" />

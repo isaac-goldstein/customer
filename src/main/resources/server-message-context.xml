@@ -2,10 +2,22 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="xaFactory" class="org.apache.activemq.ActiveMQXAConnectionFactory">
-        <property name="brokerURL" value="tcp://localhost:61616" />
-        <property name="userName" value="admin" />
-        <property name="password" value="admin" />
+    
+    <bean class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="prodConnectionFactory" />
+        <property name="destinationName" value="customer.create" />
+        <property name="messageListener" ref="messageListener" />
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="sessionTransacted" value="true" />
     </bean>
+
+    <bean id="prodConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="tcp://localhost:61616" />
+        <property name="userName" value="admin"/>
+        <property name="password" value="admin"/>
+    </bean>    
+
+    
+
 
 </beans>

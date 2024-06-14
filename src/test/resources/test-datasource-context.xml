@@ -4,9 +4,13 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 
+
+
+
+    
     <!-- Atomikos Datasource Bean -->
     <bean id="customerDataSource" class="com.atomikos.jdbc.AtomikosDataSourceBean">
-        <property name="uniqueResourceName" value="customerDataSource" />
+        <property name="uniqueResourceName" value="testCustomerDataSource" /> 
         <property name="xaDataSourceClassName" value="org.h2.jdbcx.JdbcDataSource" />
         <property name="xaProperties">
             <props>
@@ -16,6 +20,8 @@
         </property>
         <property name="poolSize" value="10" />
     </bean>
+
+   
 
 
 </beans>
