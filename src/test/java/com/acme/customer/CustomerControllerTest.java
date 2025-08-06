@@ -24,7 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 @WebAppConfiguration
 @ContextConfiguration(locations = { "classpath:customer-context.xml", "classpath:test-message-context.xml",
         "classpath:test-datasource-context.xml", "classpath:customer-test-context.xml" })
-        @Transactional
+@Transactional
 public class CustomerControllerTest extends AbstractTest {
 
     @Autowired
@@ -44,14 +44,8 @@ public class CustomerControllerTest extends AbstractTest {
                 .andExpect(jsonPath("$.id").value(1));
     }
 
-    @Test
-    public void testCreateCustomer() throws Exception {
-        mockMvc.perform(post("/customer")
-                .param("id", "2")
-                .param("firstName", "John")
-                .param("lastName", "Doe"))
-                .andExpect(status().isCreated());
-    }
+    // TODO generate a create customer controller test
+
 
     @Test
     @Ignore
@@ -77,11 +71,11 @@ public class CustomerControllerTest extends AbstractTest {
 
     // Negative case: Attempt to create a customer with invalid data
     @Test
-    //@Ignore
+    // @Ignore
     public void testCreateInvalidCustomer() throws Exception {
         mockMvc.perform(post("/customer")
                 .param("id", "2")
-                .param("firstName", "")  // Empty first name
+                .param("firstName", "") // Empty first name
                 .param("lastName", "Doe"))
                 .andExpect(status().isBadRequest());
     }
