@@ -15,8 +15,8 @@
 		<spring.version>5.3.26</spring.version>
 		<log4j.version>2.18.0</log4j.version>
 		<javax.servelt.version>4.0.1</javax.servelt.version>
-		<!-- <maven.compiler.target>1.8</maven.compiler.target>
-		<maven.compiler.source>1.8</maven.compiler.source> -->
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source> 
 	</properties>
 	<dependencies>
 
@@ -85,12 +85,12 @@
 			<artifactId>transactions-jta</artifactId>
 			<version>6.0.0</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 			<version>5.8.1</version>
 			<scope>test</scope>
-		</dependency>
+		</dependency> -->
 
 		<dependency>
 			<groupId>com.atomikos</groupId>
